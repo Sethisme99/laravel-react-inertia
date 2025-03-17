@@ -13,4 +13,16 @@ class Project extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    //need to to learn more about this:
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
 }
