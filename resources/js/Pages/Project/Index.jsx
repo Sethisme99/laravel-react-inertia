@@ -1,27 +1,30 @@
 import Pagination from "@/Components/Pagination";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
+import {PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP} from "@/constants.jsx";
 
 
 export default function index({projects}){
     return(
         <AuthenticatedLayout
-
         header={
             <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                 Projects
             </h2>
         }
         >
-         
-         <Head title="Projects"/>
-         
+
+        {/*Tab title props component*/}
+         <Head title="Project"/>
+
+            {/*Main Props Component*/}
             <div className="py-12">
             <div className="mx-auto max-w-9xl sm:px-6 lg:px-8">
                 <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-900">
                 <div className="p-6 text-gray-900 dark:text-gray-100">
-                    
+
                     <div className="overflow-x-auto">
+                      {/*Project Table*/}
                     <table className="min-w-full border border-gray-700 shadow-md rounded-lg">
                         <thead className="bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
                         <tr>
@@ -37,30 +40,28 @@ export default function index({projects}){
                         </thead>
                         <tbody>
                         {projects.data.map((project, index) => (
-                            <tr 
-                            key={project.id} 
+                            <tr
+                            key={project.id}
                             className={`${
-                                index % 2 === 0 
-                                ? 'bg-gray-100 dark:bg-gray-800' 
+                                index % 2 === 0
+                                ? 'bg-gray-100 dark:bg-gray-800'
                                 : 'bg-gray-50 dark:bg-gray-700'
                             } hover:bg-gray-200 dark:hover:bg-gray-600 transition`}
                             >
                             <td className="px-4 py-3 border-b border-gray-700 dark:text-gray-300">{project.id}</td>
                             <td className="px-4 py-3 border-b border-gray-700">
-                                <img 
-                                src={project.image_path} 
-                                alt="Project" 
-                                className="w-8 h-8 object-cover rounded-md border border-gray-500" 
+                                <img
+                                src={project.image_path}
+                                alt="Project"
+                                className="w-8 h-8 object-cover rounded-md border border-gray-500"
                                 />
                             </td>
                             <td className="px-4 py-3 border-b border-gray-700 dark:text-gray-300">{project.name}</td>
                             <td className="px-4 py-3 border-b border-gray-700">
-                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                project.status === 'Completed' 
-                                    ? 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-200' 
-                                    : 'bg-yellow-200 text-yellow-800 dark:bg-yellow-700 dark:text-yellow-200'
-                                }`}>
-                                {project.status}
+                                <span className={"px-2 py-1 rounded text-white " +
+                                 PROJECT_STATUS_CLASS_MAP[project.status]
+                                }>
+                                {PROJECT_STATUS_TEXT_MAP[project.status]}
                                 </span>
                             </td>
                             <td className="px-4 py-3 border-b border-gray-700 dark:text-gray-400">{project.created_at}</td>
@@ -73,8 +74,8 @@ export default function index({projects}){
                                >
                                 Edit
                                </Link>
-                               
-                                <Link 
+
+                                <Link
                                 href={route("project.destroy", project.id)}
                                 className="text-red-600 hover:underline ml-2 dark:text-red-400"
                                 >Delete</Link>
@@ -83,6 +84,7 @@ export default function index({projects}){
                         ))}
                         </tbody>
                     </table>
+                      {/*Pagination*/}
                     <Pagination links={projects?.meta?.links || []} />
                     </div>
                 </div>
@@ -91,7 +93,7 @@ export default function index({projects}){
             </div>
 
 
-            
+
 
         </AuthenticatedLayout>
     )
