@@ -1,11 +1,50 @@
 import Pagination from "@/Components/Pagination";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import {PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP} from "@/constants.jsx";
+import TextInput from "@/Components/TextInput";
+import SelectInput from "@/Components/SelectInput";
+import {ChevronUpIcon, ChevronDownIcon} from '@heroicons/react/16/solid';
+import TableHeading from "@/Components/TableHeading";
 
 
-export default function index({projects}){
-    return(
+
+export default function index({projects, queryParams = null}){
+
+  {/*Fileter function start*/}
+  queryParams = queryParams || {}
+  const searchFieldChanged = (name, value) =>{
+    if(value){
+      queryParams[name] = value
+    }else{
+      delete queryParams[name]
+    }
+    router.get(route('project.index'), queryParams)
+  }
+
+  const onKeyPress = (name, e)=>{
+    if(e.key !== 'Enter') return;
+    searchFieldChanged(name, e.target.value);
+  }
+
+  {/*Sort function*/}
+
+  const sortChanged = (name) => {
+    if (name === queryParams.sort_field) {
+      if (queryParams.sort_direction === "asc") {
+        queryParams.sort_direction = "desc";
+      } else {
+        queryParams.sort_direction = "asc";
+      }
+    } else {
+      queryParams.sort_field = name;
+      queryParams.sort_direction = "asc";
+    }
+    router.get(route("project.index"), queryParams);
+  };
+
+
+  return(
         <AuthenticatedLayout
         header={
             <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
@@ -26,18 +65,101 @@ export default function index({projects}){
                     <div className="overflow-x-auto">
                       {/*Project Table*/}
                     <table className="min-w-full border border-gray-700 shadow-md rounded-lg">
-                        <thead className="bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+
+                        {/*Table*/}
+
+                      <thead className="bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300 border-b font-medium">
+                          <tr>
+                              <TableHeading
+                                name="id"
+                                sort_field={queryParams.sort_field}
+                                sort_direction={queryParams.sort_direction}
+                                sortChanged={sortChanged}
+                              >
+                                ID
+                              </TableHeading>
+
+                              <th className="px-4 py-3 text-left">Image</th>
+
+                              <TableHeading
+                                name="name"
+                                sort_field={queryParams.sort_field}
+                                sort_direction={queryParams.sort_direction}
+                                sortChanged={sortChanged}
+                              >
+                                Name
+                              </TableHeading>
+
+                              <TableHeading
+                                name="status"
+                                sort_field={queryParams.sort_field}
+                                sort_direction={queryParams.sort_direction}
+                                sortChanged={sortChanged}
+                              >
+                                Status
+                              </TableHeading>
+
+
+                              <TableHeading
+                                name="created_at"
+                                sort_field={queryParams.sort_field}
+                                sort_direction={queryParams.sort_direction}
+                                sortChanged={sortChanged}
+                              >
+                                Create Date
+                              </TableHeading>
+
+
+                              <TableHeading
+                                name="due_date"
+                                sort_field={queryParams.sort_field}
+                                sort_direction={queryParams.sort_direction}
+                                sortChanged={sortChanged}
+                              >
+                                Due Date
+                              </TableHeading>
+
+
+                              <th className="px-4 py-3 text-left">Created By</th>
+                              <th className="px-4 py-3 text-left">Actions</th>
+                          </tr>
+                      </thead>
+
+
+
+                    {/*Filter*/}
+                    <thead className="bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
                         <tr>
-                            <th className="border-b px-4 py-3 text-left font-medium">ID</th>
-                            <th className="border-b px-4 py-3 text-left font-medium">Image</th>
-                            <th className="border-b px-4 py-3 text-left font-medium">Name</th>
-                            <th className="border-b px-4 py-3 text-left font-medium">Status</th>
-                            <th className="border-b px-4 py-3 text-left font-medium">Create Date</th>
-                            <th className="border-b px-4 py-3 text-left font-medium">Due Date</th>
-                            <th className="border-b px-4 py-3 text-left font-medium">Created By</th>
-                            <th className="border-b px-4 py-3 text-left font-medium">Actions</th>
+                            <th className="border-b px-4 py-3 text-left font-medium"></th>
+                            <th className="border-b px-4 py-3 text-left font-medium"></th>
+
+                            <th className="border-b px-4 py-3 text-left font-medium">
+                                <TextInput className="w-full"
+                                placeholder = "Project Name:"
+                                defaultValue = {queryParams.name}
+                                onBlur = {e=>searchFieldChanged('name', e.target.value)}
+                                onKeyPress={e => onKeyPress('name', e)} />
+                            </th>
+                            <th className="border-b px-4 py-3 text-left font-medium">
+                                <SelectInput className="w-full"
+                                defaultValue = {queryParams.status}
+                                onChange = {(e)=>
+                                  searchFieldChanged("status", e.target.value)
+                                }>
+                                  <option value="">Selete Status</option>
+                                  <option value="pending">Pending</option>
+                                  <option value="in_progress">In Progress</option>
+                                  <option value="completed">Completed</option>
+                                </SelectInput>
+                            </th>
+                            <th className="border-b px-4 py-3 text-left font-medium"></th>
+                            <th className="border-b px-4 py-3 text-left font-medium"></th>
+                            <th className="border-b px-4 py-3 text-left font-medium"></th>
+                            <th className="border-b px-4 py-3 text-left font-medium"></th>
                         </tr>
                         </thead>
+
+                        {/*Body TB*/}
                         <tbody>
                         {projects.data.map((project, index) => (
                             <tr
