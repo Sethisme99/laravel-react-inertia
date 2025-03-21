@@ -4,7 +4,6 @@ import { Head, Link, router } from "@inertiajs/react";
 import {PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP} from "@/constants.jsx";
 import TextInput from "@/Components/TextInput";
 import SelectInput from "@/Components/SelectInput";
-import {ChevronUpIcon, ChevronDownIcon} from '@heroicons/react/16/solid';
 import TableHeading from "@/Components/TableHeading";
 
 
@@ -178,7 +177,11 @@ export default function index({projects, queryParams = null}){
                                 className="w-8 h-8 object-cover rounded-md border border-gray-500"
                                 />
                             </td>
-                            <td className="px-4 py-3 border-b border-gray-700 dark:text-gray-300">{project.name}</td>
+                            <td className="px-4 py-3 border-b border-gray-700 dark:text-gray-300">
+                              <Link href={route('project.show', project.id)}>
+                                {project.name}
+                              </Link>  
+                            </td>
                             <td className="px-4 py-3 border-b border-gray-700">
                                 <span className={"px-2 py-1 rounded text-white " +
                                  PROJECT_STATUS_CLASS_MAP[project.status]
