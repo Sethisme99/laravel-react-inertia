@@ -10,19 +10,23 @@ class Project extends Model
     /** @use HasFactory<\Database\Factories\ProjectFactory> */
     use HasFactory;
 
-    //a ways to estabilsh between two model:
-    //in this case is Project Model and Task Model:
+    protected $fillable = ['image_path', 'name', 'description', 'status', 'due_date', 'created_by', 'updated_by'];
+
+    //Model Relationships
+
+    //One-to-Many Relationship with Task
     public function tasks()
     {
         return $this->hasMany(Task::class);
     }
 
-    //need to to learn more about this:
+    //Many-to-One Relationship with User (Created By)
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    //Many-to-One Relationship with User (Updated By)
     public function updatedBy()
     {
         return $this->belongsTo(User::class, 'updated_by');

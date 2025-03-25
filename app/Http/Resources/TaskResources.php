@@ -5,10 +5,10 @@ use Carbon\Carbon;
 use App\Http\Resources\ProjectResources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 class TaskResources extends JsonResource
 {
+    public static $wrap = false;
     /**
      * Transform the resource into an array.
      *
@@ -16,7 +16,7 @@ class TaskResources extends JsonResource
      */
     public function toArray(Request $request): array
     {
-       
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -33,6 +33,6 @@ class TaskResources extends JsonResource
             'createdBy' => new UserResource($this->createdBy),
             'updatedBy' => new UserResource($this->updatedBy),
         ];
-    
+
     }
 }

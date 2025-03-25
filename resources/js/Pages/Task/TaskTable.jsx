@@ -5,20 +5,32 @@ import TableHeading from "@/Components/TableHeading";
 import { TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/constants.jsx";
 import { Link, router } from "@inertiajs/react";
 
-export default function TaskTable({tasks, queryParams = null,}){
-
-{/*Fileter function start*/}
+export default function TaskTable({project, tasks, queryParams = null, hideProjectColumn = false}){
 
 queryParams = queryParams || {}
 
-const searchFieldChanged = (name, value) =>{
-    if(value){
-      queryParams[name] = value
-    }else{
-      delete queryParams[name]
-    }
-    router.get(route('task.index'), queryParams)
+{/*Fileter function start*/}
+const searchFieldChanged = (name, value) => {
+  // Preserve existing filters while updating the new one
+  const updatedParams = {
+      ...queryParams,  // ✅ Keep existing filters
+      [name]: value || undefined, // ✅ Update new filter (remove if empty)
+  };
+
+  // ✅ If inside a project, stay within the project page
+  if (project) {
+      router.get(route("project.show", project.id), updatedParams, {
+          preserveScroll: true,
+          preserveState: true,
+      });
+  } else {
+      router.get(route("task.index"), updatedParams, {
+          preserveScroll: true,
+          preserveState: true,
+      });
+  }
 };
+
 {/*Key Press function*/}
 const onKeyPress = (name, e)=>{
     if(e.key !== 'Enter') return;
@@ -28,18 +40,30 @@ const onKeyPress = (name, e)=>{
 {/*Sort function*/}
 
 const sortChanged = (name) => {
-    if (name === queryParams.sort_field) {
-      if (queryParams.sort_direction === "asc") {
-        queryParams.sort_direction = "desc";
-      } else {
-        queryParams.sort_direction = "asc";
-      }
+    const newSortDirection =
+      queryParams.sort_field === name && queryParams.sort_direction === "asc"
+        ? "desc"
+        : "asc";
+
+    const updatedParams = {
+      ...queryParams,
+      sort_field: name,
+      sort_direction: newSortDirection,
+    };
+
+    // If the table is inside a Project Page, keep sorting within that project
+    if (project) {
+      router.get(route("project.show", project.id), updatedParams, {
+        preserveScroll: true,  // ✅ Stops page from jumping to top
+        preserveState: true,   // ✅ Prevents unnecessary re-renders
+      });
     } else {
-      queryParams.sort_field = name;
-      queryParams.sort_direction = "asc";
-    }
-    router.get(route("task.index"), queryParams);
-};
+      router.get(route("task.index"), updatedParams, {
+        preserveScroll: true,  // ✅ Stops page from jumping to top
+        preserveState: true,   // ✅ Prevents unnecessary re-renders
+      });
+}};
+
 
 return(
 <>
@@ -71,6 +95,8 @@ ID
  >
 Name
  </TableHeading>
+
+ {!hideProjectColumn && (<th className="px-4 py-3 text-left">Project Name</th>)}
 
  <TableHeading
     name="status"
@@ -120,6 +146,9 @@ Due Date
     onBlur = {e=>searchFieldChanged('name', e.target.value)}
     onKeyPress={e => onKeyPress('name', e)} />
 </th>
+
+{!hideProjectColumn && (<th className="border-b px-4 py-3 text-left font-medium"></th>)}
+
 <th className="border-b px-4 py-3 text-left font-medium">
     <SelectInput className="w-full"
     defaultValue = {queryParams.status}
@@ -141,6 +170,7 @@ Due Date
 
 {/*Body TB*/}
 <tbody>
+
 {tasks.data.map((task, index) => (
     <tr
     key={task.id}
@@ -158,7 +188,10 @@ Due Date
         className="w-8 h-8 object-cover rounded-md border border-gray-500"
     />
 </td>
+
 <td className="px-4 py-3 border-b border-gray-700 dark:text-gray-300">{task.name}</td>
+{!hideProjectColumn && (<td className="px-4 py-3 border-b border-gray-700 dark:text-gray-300">{task.project.name}</td>)}
+
 <td className="px-4 py-3 border-b border-gray-700">
     <span className={"px-2 py-1 rounded text-white " +
         TASK_STATUS_CLASS_MAP[task.status]
@@ -188,8 +221,5 @@ Due Date
 </table>
     {/*Pagination*/}
 <Pagination links={tasks?.meta?.links || []} />
-    </div>
-    </>
-  )
-
-}
+</div>
+</>)}
