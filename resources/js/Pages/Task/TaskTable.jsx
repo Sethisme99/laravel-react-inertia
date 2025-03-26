@@ -6,7 +6,6 @@ import { TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/constants.jsx";
 import { Link, router } from "@inertiajs/react";
 
 export default function TaskTable({project, tasks, queryParams = null, hideProjectColumn = false}){
-
 queryParams = queryParams || {}
 
 {/*Fileter function start*/}
@@ -170,8 +169,15 @@ Due Date
 
 {/*Body TB*/}
 <tbody>
+{tasks.data.length === 0?(
+    <tr>
+        <td className="text-center py-4 text-white">
+            There's no task available.
+        </td>
+    </tr>
+):(
 
-{tasks.data.map((task, index) => (
+tasks.data.map((task, index) => (
     <tr
     key={task.id}
     className={`${
@@ -216,7 +222,8 @@ Due Date
         >Delete</Link>
     </td>
     </tr>
-))}
+))
+)}
 </tbody>
 </table>
     {/*Pagination*/}

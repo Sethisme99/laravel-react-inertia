@@ -44,6 +44,15 @@ const sortChanged = (name) => {
     });
 };
 
+//Delete:
+  const deleteProject = (project) =>{
+    if(!window.confirm("Are you sure you want to delete the project?")){
+      return;
+    }
+    console.log("id",project.id);
+    router.delete(route("project.destroy", project.id));
+  };
+
 
 
 return(
@@ -185,10 +194,10 @@ return(
             Edit
             </Link>
 
-            <Link
-            href={route("project.destroy", project.id)}
+            <button
+            onClick={(e)=>deleteProject(project)}
             className="text-red-600 hover:underline ml-2 dark:text-red-400"
-            >Delete</Link>
+            >Delete</button>
         </td>
         </tr>
     ))}

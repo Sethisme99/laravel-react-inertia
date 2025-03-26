@@ -2,10 +2,11 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link } from "@inertiajs/react";
 import ProjectTable from "./ProjectTable";
 
-export default function index({projects, queryParams = null, success}){
+export default function index({auth ,projects, queryParams = null, success}){
 
   return(
     <AuthenticatedLayout
+    user = {auth.user}
     header={
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">

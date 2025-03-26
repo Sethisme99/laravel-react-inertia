@@ -11,6 +11,7 @@ class Project extends Model
     use HasFactory;
 
     protected $fillable = ['image_path', 'name', 'description', 'status', 'due_date', 'created_by', 'updated_by'];
+    
 
     //Model Relationships
 
@@ -31,5 +32,14 @@ class Project extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    //delete task when the delete the project:
+    
+    protected static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($project) {
+            $project->tasks()->delete();
+    });}
 
 }

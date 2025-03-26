@@ -8,6 +8,7 @@ import TextAreaInput from "@/Components/TextAreaInput";
 
 export default function Create(){
 
+
   //Inertia.js, the useForm helper
   const {data, setData, post, errors, reset} = useForm({
     image: "",
@@ -35,6 +36,7 @@ return(
   }>
 
   <Head title="Create"/>
+  
 
 
   <div className="py-12">
