@@ -24,14 +24,20 @@ class Project extends Model
     //Many-to-One Relationship with User (Created By)
     public function createdBy()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by')->withTrashed();
     }
 
     //Many-to-One Relationship with User (Updated By)
     public function updatedBy()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by')->withTrashed();
     }
+
+    //still show the soft deleted user
+    public function user(){
+        return $this->belongsTo(User::class)->withTrashed();
+    }
+
 
     //delete task when the delete the project:
     

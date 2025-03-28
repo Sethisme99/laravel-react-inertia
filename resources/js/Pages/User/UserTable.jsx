@@ -9,6 +9,8 @@ export default function UserTable({
     queryParams = null,
 }){
 
+
+console.log(users);
 //if queryParams is not null then return it as empty obj:
 queryParams = queryParams || {};
 
@@ -78,6 +80,7 @@ return(
             >
               ID
             </TableHeading>
+            <th className="px-4 py-3 text-left">Role</th>
 
             <th className="px-4 py-3 text-left">Image</th>
 
@@ -119,6 +122,7 @@ return(
     <tr className="text-nowrap">
         <th className="px-3 py-3"></th>
         <th className="px-3 py-3"></th>
+        <th className="px-3 py-3"></th>
         <th className="px-3 py-3">
         <TextInput
             className="w-full"
@@ -158,6 +162,11 @@ return(
         } hover:bg-gray-200 dark:hover:bg-gray-600 transition`}
         >
         <td className="px-4 py-3 border-b border-gray-700 dark:text-gray-300">{user.id}</td>
+        
+        <td className="px-4 py-3 border-b border-gray-700 dark:text-gray-300">
+        {user.admin === true ? "admin" : "user"}
+        </td>
+
         <td className="px-4 py-3 border-b border-gray-700">
             <img
             src={user.image_path}

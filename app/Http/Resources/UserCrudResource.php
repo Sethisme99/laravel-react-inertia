@@ -24,6 +24,12 @@ class UserCrudResource extends JsonResource
             'image_path' => $this->image_path && !(str_starts_with($this->image_path, 'http')) ?
             Storage::url($this->image_path) : $this->image_path,
             "created_at" => (new Carbon($this->created_at))->format('Y-m-d H:i:s'),
+            // Only include 'admin' field if user is admin
+            $this->mergeWhen($this->is_admin, [
+                'admin' => true
+            ]),
+        
+        
         ];
     }
 }

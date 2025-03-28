@@ -30,5 +30,10 @@ class Task extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+        //still show the soft deleted user
+        public function user(){
+            return $this->belongsTo(User::class)->withTrashed();
+        }
+    
 
 }
