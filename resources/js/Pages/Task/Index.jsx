@@ -3,7 +3,7 @@ import { Head, Link } from "@inertiajs/react";
 import TaskTable from "./TaskTable";
 
 
-export default function index({tasks, queryParams = null}){
+export default function index({tasks, queryParams = null, success}){
 
   return(
    //use default layout from breeze and modified it:
@@ -25,6 +25,10 @@ export default function index({tasks, queryParams = null}){
 
   {/*Tab title props component*/}
   <Head title="Task"/>
+    {success &&(
+    <div className="bg-emerald-500 py-2 px-4 text-white rounded">
+      {success}
+    </div>)}
 
   {/*Main Props Component*/}
     <div className="py-12">

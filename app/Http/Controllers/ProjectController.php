@@ -67,7 +67,7 @@ class ProjectController extends Controller
     {
         $data = $request->validated();
         //The @var annotation is updated to allow null, preventing Intelephense errors.
-        /** @var $image \Illuminate\Http\UploadedFile */
+        /** @var \Illuminate\Http\UploadedFile $image */
         $image = $data['image'] ?? null;
         $data['created_by'] = Auth::id();
         $data['updated_by'] = Auth::id();

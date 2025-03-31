@@ -54,7 +54,8 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
-        /**@var $image \Illuminat\Http\UploadedFile */
+        
+        /** @var \Illuminate\Http\UploadedFile $image */
 
         $image = $data['image'] ?? null;
         $data['email_verified_at'] = time();

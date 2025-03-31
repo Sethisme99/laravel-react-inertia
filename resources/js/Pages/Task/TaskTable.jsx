@@ -63,6 +63,13 @@ const sortChanged = (name) => {
       });
 }};
 
+const deleteTask = (task) =>{
+    if(!window.confirm("Are you sure you want to delete the Task?")){
+        return;
+    }
+    router.delete(route("task.destroy", task.id));
+};
+
 
 return(
 <>
@@ -195,8 +202,10 @@ tasks.data.map((task, index) => (
     />
 </td>
 
-<td className="px-4 py-3 border-b border-gray-700 dark:text-gray-300">{task.name}</td>
-{!hideProjectColumn && (<td className="px-4 py-3 border-b border-gray-700 dark:text-gray-300">{task.project.name}</td>)}
+<td className="px-4 py-3 border-b border-gray-700 dark:text-gray-300">
+    <Link href={route('task.show', task.id)}>{task.name}</Link>
+</td>
+{!hideProjectColumn && (<td className="px-4 py-3 border-b border-gray-700 dark:text-gray-300 truncate max-w-[10ch]">{task.project.name}</td>)}
 
 <td className="px-4 py-3 border-b border-gray-700">
     <span className={"px-2 py-1 rounded text-white " +
@@ -216,10 +225,10 @@ tasks.data.map((task, index) => (
         Edit
         </Link>
 
-        <Link
-        href={route("task.destroy", task.id)}
+        <button
+        onClick={(e)=>deleteTask(task)}
         className="text-red-600 hover:underline ml-2 dark:text-red-400"
-        >Delete</Link>
+        >Delete</button>
     </td>
     </tr>
 ))
